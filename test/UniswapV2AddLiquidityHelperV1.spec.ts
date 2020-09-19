@@ -980,23 +980,23 @@ describe('UniswapV2AddLiquidityHelperV1', () => {
         expect(token0Balance0).to.equal(token0Balance2);
       })
 
-      it('emergencyWithdrawEther', async () => {
-        const amount = expandTo18Decimals(2);
+      // it('emergencyWithdrawEther', async () => {
+      //   const amount = expandTo18Decimals(2);
 
-        const ethBalance0 = await provider.getBalance(wallet.address)
-        console.log("ethBalance0", formatBN(ethBalance0));
+      //   const ethBalance0 = await provider.getBalance(wallet.address)
+      //   console.log("ethBalance0", formatBN(ethBalance0));
 
-        await wallet.sendTransaction({to: helperV1.address, gasPrice: 0, value: amount});
-        const ethBalance1 = await provider.getBalance(wallet.address)
-        console.log("ethBalance1", formatBN(ethBalance1));
+      //   await wallet.sendTransaction({to: helperV1.address, gasPrice: 0, value: amount});
+      //   const ethBalance1 = await provider.getBalance(wallet.address)
+      //   console.log("ethBalance1", formatBN(ethBalance1));
 
-        await helperV1.emergencyWithdrawEther();
-        const ethBalance2 = await provider.getBalance(wallet.address)
-        console.log("ethBalance2", formatBN(ethBalance2));
+      //   await helperV1.emergencyWithdrawEther();
+      //   const ethBalance2 = await provider.getBalance(wallet.address)
+      //   console.log("ethBalance2", formatBN(ethBalance2));
 
-        expect(ethBalance1).to.lt(ethBalance0);
-        expect(ethBalance2).to.gt(ethBalance1);
-      })
+      //   expect(ethBalance1).to.lt(ethBalance0);
+      //   expect(ethBalance2).to.gt(ethBalance1);
+      // })
 
       async function addLiquidity(token0Amount: BigNumber, token1Amount: BigNumber) {
         await token0.transfer(pair.address, token0Amount)

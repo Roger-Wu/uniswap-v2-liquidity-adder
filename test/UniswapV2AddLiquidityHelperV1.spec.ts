@@ -962,6 +962,42 @@ describe('UniswapV2AddLiquidityHelperV1', () => {
         console.log("minted liquidity", formatBN(liq1.sub(liq0)));
       })
 
+      it('emergencyWithdrawErc20', async () => {
+        const token0Amount = expandTo18Decimals(2);
+
+        const token0Balance0 = await token0.balanceOf(wallet.address);
+        console.log("token0Balance0", formatBN(token0Balance0));
+
+        await token0.transfer(helperV1.address, token0Amount);
+        const token0Balance1 = await token0.balanceOf(wallet.address);
+        console.log("token0Balance1", formatBN(token0Balance1));
+
+        await helperV1.emergencyWithdrawErc20(token0.address);
+        const token0Balance2 = await token0.balanceOf(wallet.address);
+        console.log("token0Balance2", formatBN(token0Balance2));
+
+        expect(token0Balance1).to.lt(token0Balance0);
+        expect(token0Balance0).to.equal(token0Balance2);
+      })
+
+      it('emergencyWithdrawEther', async () => {
+        const amount = expandTo18Decimals(2);
+
+        const ethBalance0 = await provider.getBalance(wallet.address)
+        console.log("ethBalance0", formatBN(ethBalance0));
+
+        await wallet.sendTransaction({to: helperV1.address, gasPrice: 0, value: amount});
+        const ethBalance1 = await provider.getBalance(wallet.address)
+        console.log("ethBalance1", formatBN(ethBalance1));
+
+        await helperV1.emergencyWithdrawEther();
+        const ethBalance2 = await provider.getBalance(wallet.address)
+        console.log("ethBalance2", formatBN(ethBalance2));
+
+        expect(ethBalance1).to.lt(ethBalance0);
+        expect(ethBalance2).to.gt(ethBalance1);
+      })
+
       async function addLiquidity(token0Amount: BigNumber, token1Amount: BigNumber) {
         await token0.transfer(pair.address, token0Amount)
         await token1.transfer(pair.address, token1Amount)

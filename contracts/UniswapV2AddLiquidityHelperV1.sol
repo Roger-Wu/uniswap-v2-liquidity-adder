@@ -31,8 +31,8 @@ contract UniswapV2AddLiquidityHelperV1 is Ownable {
         _wethAddress = wethAddress;
     }
 
-    // receive() external payable {}
     // fallback() external payable {}
+    receive() external payable {}
 
     // Approve enough amount of tokenA and tokenB to this contract before calling this function.
     // Uniswap pair tokenA-tokenB must exist.

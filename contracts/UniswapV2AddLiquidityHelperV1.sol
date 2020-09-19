@@ -5,13 +5,14 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
-// To avoid SafeMath being imported twice, we have to modify UniswapV2Library.sol.
+// To avoid SafeMath being imported twice, we modified UniswapV2Library.sol.
 import "./libraries2/UniswapV2Library.sol";
-// We have to modify the pragma.
+// We modified the pragma.
 import "./libraries2/Math.sol";
 import "./interfaces/IUniswapV2Router02.sol";
 import "./interfaces/IWETH.sol";
 
+/// @author Roger Wu (Twitter: @rogerwutw, GitHub: Roger-Wu)
 contract UniswapV2AddLiquidityHelperV1 is Ownable {
     using SafeMath for uint;
     using SafeERC20 for IERC20;
@@ -30,8 +31,11 @@ contract UniswapV2AddLiquidityHelperV1 is Ownable {
         _wethAddress = wethAddress;
     }
 
-    // Approve tokenA and tokenB to this contract before calling this function.
-    // Uniswap pair of tokenA-tokenB must exist.
+    // receive() external payable {}
+    // fallback() external payable {}
+
+    // Approve enough amount of tokenA and tokenB to this contract before calling this function.
+    // Uniswap pair tokenA-tokenB must exist.
     // gas cost: ~310000
     function swapAndAddLiquidityTokenAndToken(
         address tokenAddressA,
@@ -97,7 +101,7 @@ contract UniswapV2AddLiquidityHelperV1 is Ownable {
         );
     }
 
-    // try to add tokens in this contract as more as possible to a Uniswap pair
+    // add as more tokens as possible to a Uniswap pair
     function _swapAndAddLiquidity(
         address tokenAddressA,
         address tokenAddressB,
@@ -136,7 +140,7 @@ contract UniswapV2AddLiquidityHelperV1 is Ownable {
         // All ether and tokens directly sent to this contract will be considered as a donation to the contract owner.
     }
 
-    // swap tokens to make newAmountA / newAmountB ~= reserveA / reserveB
+    // swap tokens to make newAmountA / newAmountB ~= newReserveA / newReserveB
     function _swapToSyncRatio(
         address tokenAddressA,
         address tokenAddressB,
@@ -180,7 +184,6 @@ contract UniswapV2AddLiquidityHelperV1 is Ownable {
         return isSwitched ? (amountB, amountA) : (amountA, amountB);
     }
 
-    // calcAmountAToSwap with sqrt
     function calcAmountAToSwap(
         uint reserveA,
         uint reserveB,

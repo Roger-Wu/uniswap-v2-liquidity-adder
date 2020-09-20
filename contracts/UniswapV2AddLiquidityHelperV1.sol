@@ -35,6 +35,7 @@ contract UniswapV2AddLiquidityHelperV1 is Ownable {
     receive() external payable {}
 
     // Add as more tokenA and tokenB as possible to a Uniswap pair.
+    // The ratio between tokenA and tokenB can be any.
     // Approve enough amount of tokenA and tokenB to this contract before calling this function.
     // Uniswap pair tokenA-tokenB must exist.
     // gas cost: ~320000
@@ -70,6 +71,7 @@ contract UniswapV2AddLiquidityHelperV1 is Ownable {
     }
 
     // Add as more ether and tokenB as possible to a Uniswap pair.
+    // The ratio between ether and tokenB can be any.
     // Approve enough amount of tokenB to this contract before calling this function.
     // Uniswap pair WETH-tokenB must exist.
     // gas cost: ~320000

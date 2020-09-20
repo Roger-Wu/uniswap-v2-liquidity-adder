@@ -158,7 +158,6 @@ contract UniswapV2AddLiquidityHelperV1 is Ownable {
             (tokenAddressA, tokenAddressB) = (tokenAddressB, tokenAddressA);
             (reserveA, reserveB) = (reserveB, reserveA);
             (amountA, amountB) = (amountB, amountA);
-            (newAmountA, newAmountB) = (newAmountB, newAmountA);
             isSwitched = true;
         }
 

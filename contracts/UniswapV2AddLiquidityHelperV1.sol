@@ -228,7 +228,7 @@ contract UniswapV2AddLiquidityHelperV1 is Ownable {
     function _approveTokenToRouterIfNecessary(address tokenAddress, uint amount) internal {
         uint currentAllowance = IERC20(tokenAddress).allowance(address(this), _uniswapV2Router02Address);
         if (currentAllowance < amount) {
-            IERC20(tokenAddress).approve(_uniswapV2Router02Address, 2**256 - 1);
+            IERC20(tokenAddress).safeApprove(_uniswapV2Router02Address, 2**256 - 1);
         }
     }
 
@@ -238,6 +238,6 @@ contract UniswapV2AddLiquidityHelperV1 is Ownable {
 
     function emergencyWithdrawErc20(address tokenAddress) public onlyOwner {
         IERC20 token = IERC20(tokenAddress);
-        token.transfer(msg.sender, token.balanceOf(address(this)));
+        token.safeTransfer(msg.sender, token.balanceOf(address(this)));
     }
 }

@@ -116,10 +116,6 @@ contract UniswapV2AddLiquidityHelperV1 is Ownable {
         uint minLiquidityOut,
         address to
     ) internal returns(uint liquidity) {
-        // approve tokens
-        _approveTokenToRouterIfNecessary(tokenAddressA, 2**112 - 1);
-        _approveTokenToRouterIfNecessary(tokenAddressB, 2**112 - 1);
-
         (uint amountAToAdd, uint amountBToAdd) = _swapToSyncRatio(
             tokenAddressA,
             tokenAddressB,
@@ -127,6 +123,8 @@ contract UniswapV2AddLiquidityHelperV1 is Ownable {
             amountB
         );
 
+        _approveTokenToRouterIfNecessary(tokenAddressA, amountAToAdd);
+        _approveTokenToRouterIfNecessary(tokenAddressB, amountBToAdd);
         (, , liquidity) = IUniswapV2Router02(_uniswapV2Router02Address).addLiquidity(
             tokenAddressA, // address tokenA,
             tokenAddressB, // address tokenB,
@@ -174,6 +172,7 @@ contract UniswapV2AddLiquidityHelperV1 is Ownable {
             path[0] = tokenAddressA;
             path[1] = tokenAddressB;
 
+            _approveTokenToRouterIfNecessary(tokenAddressA, amountAToSwap);
             uint[] memory swapOutAmounts = IUniswapV2Router02(_uniswapV2Router02Address).swapExactTokensForTokens(
                 amountAToSwap, // uint amountIn,
                 1, // uint amountOutMin,
@@ -234,7 +233,7 @@ contract UniswapV2AddLiquidityHelperV1 is Ownable {
     function _approveTokenToRouterIfNecessary(address tokenAddress, uint amount) internal {
         uint currentAllowance = IERC20(tokenAddress).allowance(address(this), _uniswapV2Router02Address);
         if (currentAllowance < amount) {
-            IERC20(tokenAddress).safeApprove(_uniswapV2Router02Address, 2**256 - 1);
+            IERC20(tokenAddress).safeIncreaseAllowance(_uniswapV2Router02Address, 2**256 - 1 - currentAllowance);
         }
     }
 

@@ -9,12 +9,14 @@ import IUniswapV2Pair from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 
 import ERC20 from '../../build/ERC20.json'
 import WETH9 from '../../build/WETH9.json'
+import TetherToken from '../../buildUSDT/TetherToken.json'
+import Uni from '../../build/Uni.json'
 import UniswapV1Exchange from '../../build/UniswapV1Exchange.json'
 import UniswapV1Factory from '../../build/UniswapV1Factory.json'
 import UniswapV2Router01 from '../../build/UniswapV2Router01.json'
 import UniswapV2Migrator from '../../build/UniswapV2Migrator.json'
 import UniswapV2Router02 from '../../build/UniswapV2Router02.json'
-import UniswapV2AddLiquidityHelperV1 from '../../build/UniswapV2AddLiquidityHelperV1.json'
+import UniswapV2AddLiquidityHelperV1_1 from '../../build/UniswapV2AddLiquidityHelperV1_1.json'
 import RouterEventEmitter from '../../build/RouterEventEmitter.json'
 
 const overrides = {
@@ -36,15 +38,17 @@ interface V2Fixture {
   WETHExchangeV1: Contract
   pair: Contract
   WETHPair: Contract
-  helperV1: Contract
+  helperV1_1: Contract
 }
 
 export async function v2Fixture(provider: Web3Provider, [wallet]: Wallet[]): Promise<V2Fixture> {
   // deploy tokens
-  const tokenA = await deployContract(wallet, ERC20, [expandTo18Decimals(10000)])
-  const tokenB = await deployContract(wallet, ERC20, [expandTo18Decimals(10000)])
+  // const tokenA = await deployContract(wallet, ERC20, [expandTo18Decimals(10000)])
+  // const tokenB = await deployContract(wallet, ERC20, [expandTo18Decimals(10000)])
   const WETH = await deployContract(wallet, WETH9)
   const WETHPartner = await deployContract(wallet, ERC20, [expandTo18Decimals(10000)])
+  const tokenA = await deployContract(wallet, TetherToken, [expandTo18Decimals(10000), "USDT", "USDT", 6])
+  const tokenB = await deployContract(wallet, Uni, [wallet.address, wallet.address, expandTo18Decimals(10000)]) // address account, address minter_, uint mintingAllowedAfter_
 
   // deploy V1
   const factoryV1 = await deployContract(wallet, UniswapV1Factory, [])
@@ -63,10 +67,10 @@ export async function v2Fixture(provider: Web3Provider, [wallet]: Wallet[]): Pro
   // deploy migrator
   const migrator = await deployContract(wallet, UniswapV2Migrator, [factoryV1.address, router01.address], overrides)
 
-  // deploy UniswapV2AddLiquidityHelperV1
-  const helperV1 = await deployContract(
+  // deploy UniswapV2AddLiquidityHelper V1.1
+  const helperV1_1 = await deployContract(
     wallet,
-    UniswapV2AddLiquidityHelperV1,
+    UniswapV2AddLiquidityHelperV1_1,
     [factoryV2.address, router02.address, WETH.address],
     overrides
   )
@@ -106,6 +110,6 @@ export async function v2Fixture(provider: Web3Provider, [wallet]: Wallet[]): Pro
     WETHExchangeV1,
     pair,
     WETHPair,
-    helperV1
+    helperV1_1
   }
 }

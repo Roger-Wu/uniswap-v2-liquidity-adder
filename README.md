@@ -1,6 +1,6 @@
 # Uniswap V2 Liquidity Adder
 
-This tool helps you add any ratio of tokens or ETH to a Uniswap pair.
+This tool allows you to add tokens or ETH to a Uniswap V2 pair in any proportion.
 
 ## DApp
 
